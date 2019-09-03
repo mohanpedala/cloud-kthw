@@ -1,8 +1,8 @@
 terraform {
   backend "azurerm" {
-    storage_account_name  = "${var.prod_az_state_backend}"
-    container_name        = "prod_az_state_lock"
-    key                   = "azure_terraform.tfstate"
-    access_key            = "<access_key>"
+    storage_account_name  = "prodazstatebackend"
+    container_name        = "prodazstatelock"
+    key                   = "prod.terraform.tfstate"
+    access_key            = "<Enter prodazstatebacked property from the bootstrap output>"
   }
 }

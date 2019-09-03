@@ -1,9 +1,7 @@
 ## resource group creation for vnet
-resource "azurerm_resource_group" "resource_group"
-    name        = "${var.vnet_name}-rg"
+resource "azurerm_resource_group" "resource_group" {
+    name        = "${var.resource_group}"
     location    = "${var.region}"
-
-    tags        = "${var.env}"
 }
 
 ## vnet creation
@@ -13,8 +11,6 @@ resource "azurerm_virtual_network" "vnet" {
     location            = "${azurerm_resource_group.resource_group.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
     depends_on          = [azurerm_resource_group.resource_group]
-    
-    tags                = "${var.env}"
 }
 
 ## Subnet creation
@@ -23,7 +19,6 @@ resource "azurerm_subnet" "subnet" {
     resource_group_name  = "${azurerm_resource_group.resource_group.name}"
     virtual_network_name = "${azurerm_virtual_network.vnet.name}"
     address_prefix       = "${var.vnet_address_space[0]}"
-
 }
 
 ## Security Group creation
@@ -31,8 +26,6 @@ resource "azurerm_network_security_group" "sg" {
     name                = "${var.vnet_name}-sg"
     location            = "${azurerm_resource_group.resource_group.location}"
     resource_group_name = "${azurerm_resource_group.resource_group.name}"
-
-    tags                = "${var.env}"
 }
 
 ## Associating subnet to security group

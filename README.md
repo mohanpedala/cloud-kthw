@@ -5,6 +5,12 @@
 ## Pre-Requisite
 * Terraform
   - [Installing Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html)
+    Tested on:
+      ```
+      $ terraform version
+      Terraform v0.12.7
+      + provider.azurerm v1.33.0
+      ```
 * AWSCLI
   - [Installing the AWS Command Line Interface](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 * AZURECLI
