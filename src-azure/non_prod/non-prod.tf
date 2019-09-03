@@ -37,5 +37,21 @@ module "masters" {
 
   username = "${var.node_user}"
   ssh_key  = "${file(var.node_ssh_key)}"
+}
 
+module "workers" {
+  source = "./modules/instances"
+
+  vm_prefix = "worker"
+  vm_count  = "${var.worker_count}"
+  vm_size   = "Standard_D1_v2"
+
+  subnet_id           = "${module.network.subnet_id}"
+  resource_group_name = "${module.network.resource_group_name}"
+
+  private_ip_addresses = "${var.worker_ip_addresses}"
+  lb_backend_pool      = "${module.lb_workers.lb_backend_pool}"
+
+  username = "${var.node_user}"
+  ssh_key  = "${file(var.node_ssh_key)}"
 }
