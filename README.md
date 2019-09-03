@@ -1,6 +1,6 @@
 # Deploy Kubernetes the hard way in AWS and Azure
 
-## Work in progress
+# Work in progress
 
 ## Pre-Requisite
 * Terraform

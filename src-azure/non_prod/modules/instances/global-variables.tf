@@ -1,1 +1,1 @@
-../../global_templates/global-variables.tf
+../../../global_templates/global-variables.tf
