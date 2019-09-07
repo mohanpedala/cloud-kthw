@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "tfstatebucket" {
 
   ### End Server-Side encryption ###
 
-  tags {
+  tags = {
     Name = "${var.env}"
   }
 }
@@ -38,7 +38,7 @@ resource "aws_dynamodb_table" "tfstatedynamotable" {
     type = "S"
   }
 
-  tags {
+  tags = {
     Name = "${var.env}"
   }
 }

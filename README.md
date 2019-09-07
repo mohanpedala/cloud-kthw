@@ -10,6 +10,7 @@
       $ terraform version
       Terraform v0.12.7
       + provider.azurerm v1.33.0
+      + provider.aws 2.27
       ```
 * AWSCLI
   - [Installing the AWS Command Line Interface](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
