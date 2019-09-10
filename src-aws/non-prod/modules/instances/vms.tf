@@ -1,82 +1,54 @@
-resource "azurerm_network_interface" "nic" {
-  name                = "${var.vm_prefix}-${count.index}-nic"
-  location            = "${var.region}"
-  resource_group_name = "${var.resource_group_name}"
+data "aws_ami" "ubuntu" {
+  most_recent = true
 
-  count = "${var.vm_count}"
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
 
-  enable_ip_forwarding = true
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
 
-  internal_dns_name_label = "${var.vm_prefix}-${count.index}"
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+  }
 
-  ip_configuration {
-    name                          = "${var.vm_prefix}-${count.index}-ip-config"
-    subnet_id                     = "${var.subnet_id}"
-    private_ip_address_allocation = "${element(var.private_ip_addresses, count.index) != "" ? "static" : "dynamic"}"
-    private_ip_address            = "${element(var.private_ip_addresses, count.index)}"
+  owners = ["099720109477"]
+}
+
+resource "aws_instance" "master" {
+  count                       = "${length(var.master_ips)}"
+  ami                         = "${data.aws_ami.ubuntu.id}"
+  associate_public_ip_address = true
+  key_name                    = "${var.key_name}"                                       # "${aws_key_pair.k8s.key_name}"
+  vpc_security_group_ids      = ["${var.vpc_security_group_ids}"]
+  instance_type               = "${var.instance_type}"
+  private_ip                  = "${var.master_ips[count.index]}"
+  user_data                   = "name=master-${count.index}"
+  subnet_id                   = "${var.subnet_id}"
+  source_dest_check           = false
+
+  tags = {
+    Name = "master-${count.index}"
   }
 }
 
-resource "azurerm_network_interface_backend_address_pool_association" "test" {
-  count                   = "${var.vm_count}"
-  network_interface_id    = "${azurerm_network_interface.nic.*.id[count.index]}"
-  ip_configuration_name   = "${var.vm_prefix}-${count.index}-ip-config"
-  backend_address_pool_id = "${var.lb_backend_pool != "" ? var.lb_backend_pool : ""}"
-}
+resource "aws_instance" "worker" {
+  count                       = "${length(var.worker_ips)}"
+  ami                         = "${data.aws_ami.ubuntu.id}"
+  associate_public_ip_address = true
+  key_name                    = "${var.key_name}"                                       # "${aws_key_pair.k8s.key_name}"
+  vpc_security_group_ids      = ["${var.vpc_security_group_ids}"]
+  instance_type               = "${var.instance_type}"
+  private_ip                  = "${var.worker_ips[count.index]}"
+  user_data                   = "name=worker-${count.index}|pod-cidr=${var.worker_pod_cidrs[count.index]}"
+  subnet_id                   = "${var.subnet_id}"
+  source_dest_check           = false
 
-resource "azurerm_availability_set" "as" {
-  name                = "${var.vm_prefix}-as"
-  location            = "${var.region}"
-  resource_group_name = "${var.resource_group_name}"
-
-  managed = true
-
-#   tags = "${var.tags}"
-}
-
-resource "azurerm_virtual_machine" "vm" {
-  name                  = "${var.vm_prefix}-${count.index}"
-  location              = "${var.region}"
-  resource_group_name   = "${var.resource_group_name}"
-  network_interface_ids = ["${azurerm_network_interface.nic.*.id[count.index]}"]
-  vm_size               = "${var.vm_size}"
-
-  count = "${var.vm_count}"
-
-  availability_set_id = "${azurerm_availability_set.as.id}"
-
-  # Uncomment this line to delete the OS disk automatically when deleting the VM
-  delete_os_disk_on_termination = true
-
-  # Uncomment this line to delete the data disks automatically when deleting the VM
-  delete_data_disks_on_termination = true
-
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
+  tags = {
+    Name = "worker-${count.index}"
   }
-
-  storage_os_disk {
-    name              = "${var.vm_prefix}-${count.index}-osdisk"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-    disk_size_gb      = 50
-  }
-
-  os_profile {
-    computer_name  = "${var.vm_prefix}-${count.index}"
-    admin_username = "${var.username}"
-  }
-  os_profile_linux_config {
-    disable_password_authentication = true
-
-    ssh_keys {
-      path     = "/home/${var.username}/.ssh/authorized_keys"
-      key_data = "${var.ssh_key}"
-    }
-  }
-#   tags = "${var.tags}"
 }

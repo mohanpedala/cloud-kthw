@@ -1,34 +1,31 @@
-
-variable "vm_prefix" {
-  description = "The prefix for VM names"
+variable "key_name" {
+  description = "SSH key name"
+  type        = "string"
 }
 
-variable "vm_count" {
-  description = "The count of VMs to create"
+variable "vpc_security_group_ids" {
+  description = "List of SG ID's"
+  type    = "string"
 }
 
-variable "vm_size" {
-  description = "VM instance size"
-}
-
-variable "lb_backend_pool" {
-  default     = ""
-  description = "LB backend pool to attach the VM NICs to"
+variable "instance_type" {
+  description = "Instance size"
 }
 
 variable "subnet_id" {
-  description = "The subnet ID to place the VM NICs into"
+  description = "subnet id"
 }
 
-variable "resource_group_name" {}
-
-variable "ssh_key" {
-  description = "The public SSH key to provision to the instance user"
+variable "master_ips" {
+  description = "List of Master IP's"
+  type    = "list"
 }
 
-variable "private_ip_addresses" {
-  type        = "list"
-  description = "A list of private IP addresses that are attached in that order to the VM NICs"
+variable "worker_ips" {
+  description = "List of Worker IP's"
+  type    = "list"
 }
-
-variable "username" {}
+variable "worker_pod_cidrs" {
+  type    = "list"
+  default = []
+}

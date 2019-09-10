@@ -1,16 +1,21 @@
 variable "name" {
+  description = "Name of the resources"
+  type        = "string"
+}
+
+variable "k8s_tag" {
   description = "Tags for the resources"
   type        = "string"
 }
 variable "subnet_id" {
-  description = "The name of the resource group the LB rule belongs to"
+  description = "Subnet ID"
 }
 
 variable "vpc_id" {
-  description = "The name of the resource group the LB rule belongs to"
+  description = "VPC id"
 }
 
-variable "controller_ips" {
+variable "master_ips" {
+  description = "List of Controller IP's"
   type    = "list"
-  default = ["10.240.0.10", "10.240.0.11", "10.240.0.12"]
 }
