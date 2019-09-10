@@ -4,7 +4,7 @@ resource "aws_s3_bucket" "tfstatebucket" {
   acl    = "private"
 
   ## Force delete the bucket (delete all versions). Commented force_destroy on purpose
-  # force_destroy = true
+  force_destroy = true
 
   versioning {
     enabled = true

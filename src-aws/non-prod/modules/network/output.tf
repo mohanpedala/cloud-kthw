@@ -1,7 +1,7 @@
-# output "resource_group_name" {
-#   value = "${azurerm_resource_group.resource_group.name}"
-# }
+output "k8s-aws_subnet_id" {
+  value = "${aws_subnet.k8s-aws_subnet.id}"
+}
 
-# output "subnet_id" {
-#   value = "${azurerm_subnet.subnet.id}"
-# }
+output "k8s-aws_vpc_id" {
+  value = "${aws_vpc.k8s-aws_vpc.id}"
+}

@@ -58,7 +58,7 @@ resource "aws_route_table_association" "k8s-aws_route_table_association" {
 }
 
 resource "aws_security_group" "k8s-aws_security_group" {
-  name        = "kubernetes"
+  name        = "${var.name}-sg"
   description = "Kubernetes security group"
   vpc_id      = "${aws_vpc.k8s-aws_vpc.id}"
 
