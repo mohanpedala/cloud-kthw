@@ -19,36 +19,19 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_instance" "master" {
-  count                       = "${length(var.master_ips)}"
+resource "aws_instance" "vms" {
+  count                       = "${var.ip_count}"
   ami                         = "${data.aws_ami.ubuntu.id}"
   associate_public_ip_address = true
-  key_name                    = "${var.key_name}"                                       # "${aws_key_pair.k8s.key_name}"
+  key_name                    = "${var.key_name}"
   vpc_security_group_ids      = ["${var.vpc_security_group_ids}"]
   instance_type               = "${var.instance_type}"
-  private_ip                  = "${var.master_ips[count.index]}"
-  user_data                   = "name=master-${count.index}"
+  private_ip                  = "${var.count_index_private_ip[count.index]}"
+  user_data                   = "${var.user_data}-${count.index}"
   subnet_id                   = "${var.subnet_id}"
   source_dest_check           = false
 
   tags = {
-    Name = "master-${count.index}"
-  }
-}
-
-resource "aws_instance" "worker" {
-  count                       = "${length(var.worker_ips)}"
-  ami                         = "${data.aws_ami.ubuntu.id}"
-  associate_public_ip_address = true
-  key_name                    = "${var.key_name}"                                       # "${aws_key_pair.k8s.key_name}"
-  vpc_security_group_ids      = ["${var.vpc_security_group_ids}"]
-  instance_type               = "${var.instance_type}"
-  private_ip                  = "${var.worker_ips[count.index]}"
-  user_data                   = "name=worker-${count.index}|pod-cidr=${var.worker_pod_cidrs[count.index]}"
-  subnet_id                   = "${var.subnet_id}"
-  source_dest_check           = false
-
-  tags = {
-    Name = "worker-${count.index}"
+    Name = "${var.tag_suffix}-${count.index}"
   }
 }

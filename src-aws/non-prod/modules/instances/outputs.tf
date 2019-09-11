@@ -1,5 +1,5 @@
-# output "names" {
-#   value = "${azurerm_virtual_machine.vm.*.name}"
+# output "vm_names" {
+#   value = "${.vm.*.name}"
 # }
 
 # output "private_ip_addresses" {
