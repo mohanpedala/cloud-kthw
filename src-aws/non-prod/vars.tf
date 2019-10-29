@@ -28,3 +28,12 @@ variable "key_name" {
   description = "ssh key name"
   type        = "string"
 }
+
+variable "node_user" {
+  description = "node username"
+  type        = "string"
+}
+
+variable "worker_count" {
+  description = "The count of worker nodes to create"
+}

@@ -35,3 +35,8 @@ resource "aws_instance" "vms" {
     Name = "${var.tag_suffix}-${count.index}"
   }
 }
+
+# locals {
+#   worker_hostnames = "${split(",", replace(join(",", aws_instance.worker.*.private_dns), ".${var.aws_region}.compute.internal", ""))}"
+#   master_hostnames = "${split(",", replace(join(",", aws_instance.controller.*.private_dns), ".${var.aws_region}.compute.internal", ""))}"
+# }

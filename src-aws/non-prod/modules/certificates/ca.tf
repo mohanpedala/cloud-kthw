@@ -46,8 +46,9 @@ resource "null_resource" "ca_certs" {
   connection {
     type         = "ssh"
     user         = "${var.node_user}"
-    host         = "${element(var.apiserver_node_names, count.index)}"
-    bastion_host = "${var.apiserver_public_ip}"
+    host         = "${element(var.apiserver_public_ip, count.index)}"
+    private_key  = "${file("~/.ssh/work.pem")}"
+    # bastion_host = "${var.apiserver_public_ip}"
   }
 
   provisioner "file" {

@@ -38,3 +38,49 @@ module "worker" {
   worker_pod_cidrs            = "${var.worker_pod_cidrs}"
   tag_suffix                  = "worker"
 }
+
+module "certificates" {
+  source = "./modules/certificates"
+  apiserver_node_names  = ["${module.master.vm_hostnames}"]
+  apiserver_public_ip   = ["${module.loadbalancer.k8s-aws_lb_dns_name}"]
+  node_user            = "${var.node_user}" 
+}
+
+# module "kubeconfig" {
+#   source = "./modules/kubeconfig"
+#   node_user            = "${var.node_user}"
+# }
+
+
+# module "certificates" {
+#   source                = "./modules/certificates"
+#   kubelet_node_names    = "${module.worker.vm_hostnames}"
+#   kubelet_node_ips      = "${module.worker.private_ip}"
+
+#   apiserver_node_names  = "${module.master.vm_hostnames}"
+#   apiserver_master_ips  = "${module.master.private_ip}"
+#   apiserver_public_ip   = "${module.loadbalancer.k8s-aws_lb_dns_name}"
+#   node_user             = "${var.node_user}"
+# }
+
+# module "kubeconfig" {
+#   source = "./modules/kubeconfig"
+
+#   kubelet_node_names   = "${module.worker.vm_hostnames}"
+#   apiserver_node_names = "${module.master.vm_hostnames}"
+#   kubelet_count        = "${var.worker_count}"
+#   apiserver_public_ip  = "${module.loadbalancer.k8s-aws_lb_dns_name}"
+#   node_user            = "${var.node_user}"
+
+#   # kubelet_crt_pems                = "${module.certificates.kubelet_crt_pems}"
+#   # kubelet_key_pems                = "${module.certificates.kubelet_key_pems}"
+#   # kube-proxy_crt_pem              = "${module.certificates.kube-proxy_crt_pem}"
+#   # kube-proxy_key_pem              = "${module.certificates.kube-proxy_key_pem}"
+#   admin_crt_pem                   = "${module.certificates.admin_crt_pem}"
+#   admin_key_pem                   = "${module.certificates.admin_key_pem}"
+#   # kube-scheduler_crt_pem          = "${module.certificates.kube-scheduler_crt_pem}"
+#   # kube-scheduler_key_pem          = "${module.certificates.kube-scheduler_key_pem}"
+#   # kube-controller-manager_crt_pem = "${module.certificates.kube-controller-manager_crt_pem}"
+#   # kube-controller-manager_key_pem = "${module.certificates.kube-controller-manager_key_pem}"
+#   kube_ca_crt_pem                 = "${module.certificates.kube_ca_crt_pem}"
+# }

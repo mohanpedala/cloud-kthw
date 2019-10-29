@@ -3,6 +3,7 @@ resource "aws_lb" "k8s-aws_lb" {
   subnets            = ["${var.subnet_id}"]
   internal           = false
   load_balancer_type = "network"
+  # availability_zones = "${var.region_az_lookup}"
 
   tags = {
     Name = "${var.k8s_tag}"
